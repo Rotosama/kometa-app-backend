@@ -1,0 +1,25 @@
+{
+  "name": "kometa-app-backend",
+  "version": "1.0.0",
+  "description": "Kometa App Server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eduardpeters/kometa-app-backend.git"
+  },
+  "author": "kometeers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eduardpeters/kometa-app-backend/issues"
+  },
+  "homepage": "https://github.com/eduardpeters/kometa-app-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  }
+}
