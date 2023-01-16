@@ -1,0 +1,23 @@
+[
+    {
+        "orderId": 1,
+        "clientId": 1,
+        "origin": "Calle A",
+        "destination": "Calle B",
+        "status": "In progress"
+    },
+    {
+        "orderId": 2,
+        "clientId": 1,
+        "origin": "Calle B",
+        "destination": "Calle C",
+        "status": "In progress"
+    },
+    {
+        "orderId": 3,
+        "clientId": 1,
+        "origin": "Calle B",
+        "destination": "Calle A",
+        "status": "Delivered"
+    }
+]
