@@ -3,6 +3,8 @@ const express = require("express");
 const cors = require("cors");
 
 const indexRoute = require("./routes/index.js");
+const loginRoute = require("./routes/login.js");
+const ordersRoute = require("./routes/orders.js");
 
 // Initialize server
 const app = express();
@@ -14,6 +16,9 @@ app.use(express.json());
 
 // Routes to handle
 app.use("/", indexRoute);
+app.use("/login", loginRoute);
+app.use("/orders", ordersRoute);
+
 
 app.listen(PORT, (error) => {
     if (!error)
