@@ -1,56 +1,70 @@
-CREATE DATABASE (
+CREATE DATABASE kometaApp;
 
-)
-
-CREATE TABLE clientUsers (
-    clientID uuid NOT NULL, 
+CREATE TABLE users (
+    userID  int NOT NULL,
     firstName varchar (50) NOT NULL,
     lastName varchar (50) NOT NULL,
-    Birthday Date NOT NULL,
-    ID int NOT NULL,
+    birthdate Date NOT NULL,
+    nationalID int NOT NULL,
+    phone smallint,
     email varchar (255) NOT NULL,
     password varchar (255) NOT NULL,
+    role varchar (20) NOT NULL,
 
-    PRIMARY KEY (clientID),
-    UNIQUE (ID),
+    PRIMARY KEY (UserID),
+    UNIQUE (nationalID),
     UNIQUE (email)
 );
 
-CREATE TABLE orders (
-    OrderID uuid NOT NULL,
-    ClientID int NOT NULL,
-    DeliverID int NOT NULL,
-    DateOrder Date NOT NULL,
-    Origin varchar (255) NOT NULL,
-    Origin
-    Destination varchar (255) NOT NULL,
-    DEstination
-    Goods varchar (255) NOT NULL,
+CREATE TABLE clientUsers (
+    clientID int NOT NULL, 
+    userID varchar (50) NOT NULL,
+    defaultLatitude real NOT NULL,
+    defaultLongitude real NOT NULL,
 
-    PRIMARY KEY (OrderID),
-    FOREIGN KEY (ClientID) REFERENCES clientUsers (ClientID),
-    FOREIGN KEY (DeliverID) REFERENCES deliveryUsers (deliveryID)
+    PRIMARY KEY (clientID),
+    FOREIGN KEY (userID) REFERENCES users (userID),
+    INHERITS (Users);
 );
-
 CREATE TABLE deliveryUsers (
-    deliveryID uuid,
-    firstName varchar(50) NOT NULL, 
-    lastName varchar(50) NOT NULL,
-    email varchar (255) NOT NULL,
-    Password varchar(50),
-    isAvailable boolean,
-    Position varchar(255),
-    activeOrder int,
+    deliveryID int NOT NULL,
+    UserID int NOT NULL,
+    activeOrderID int,
+    isAvailable boolean NOT NULL,
+    currentLatitude real NOT NULL,
+    currentLongitude real NOT NULL,
 
     PRIMARY KEY (deliveryID),
-    FOREIGN KEY (activeOrder) REFERENCES orders (OrderID)
-
+    FOREIGN KEY (activeOrder) REFERENCES orders (OrderID),
+    FOREIGN KEY (userID) REFERENCES Users (userID),
+    INHERITS (Users);
 );
 
 CREATE TABLE adminUsers(
     adminID int,
-    firstName varchar(50) NOT NULL, 
-    lastName varchar(50) NOT NULL,
-    email varchar (255) NOT NULL,
-    password varchar (255) NOT NULL,
+    UserID int,
+
+    PRIMARY KEY (adminID),
+    FOREIGN KEY (userID) REFERENCES users (userID),
+    INHERITS (Users);
+
 );
+
+CREATE TABLE orders (
+    orderID uuid NOT NULL,
+    clientID int NOT NULL,
+    deliverID int NOT NULL,
+    dateOrder Date NOT NULL,
+    status varchar (20) NOT NULL,
+    amount int NOT NULL,
+    originLatitiude real NOT NULL,
+    originLongitude real NOT NULL,
+    destinationLatitude real NOT NULL,
+    destinationLOngitude real NOT NULL,
+    description varchar (255),
+
+    PRIMARY KEY (OrderID),
+    FOREIGN KEY (ClientID) REFERENCES clientUsers (clientID),
+    FOREIGN KEY (DeliverID) REFERENCES deliveryUsers (deliveryID)
+);
+
