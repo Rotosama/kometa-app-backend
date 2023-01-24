@@ -1,20 +1,23 @@
 CREATE DATABASE kometaApp;
 
+--must agree on the ID data type...
+
 CREATE TABLE users (
-    userID  int NOT NULL,
-    firstName varchar (50) NOT NULL,
-    lastName varchar (50) NOT NULL,
+    userID  serial,
+    firstName varchar(50) NOT NULL,
+    lastName varchar(50) NOT NULL,
     birthdate Date NOT NULL,
-    nationalID int NOT NULL,
+    nationalID varchar(10) NOT NULL,
     phone smallint,
-    email varchar (255) NOT NULL,
-    password varchar (255) NOT NULL,
-    role varchar (20) NOT NULL,
+    email varchar(255) NOT NULL,
+    password varchar(255) NOT NULL,
 
     PRIMARY KEY (UserID),
     UNIQUE (nationalID),
     UNIQUE (email)
 );
+
+--Not sure clientID, deliveryID or adminID are needed?
 
 CREATE TABLE clientUsers (
     clientID int NOT NULL, 
@@ -23,48 +26,43 @@ CREATE TABLE clientUsers (
     defaultLongitude real NOT NULL,
 
     PRIMARY KEY (clientID),
-    FOREIGN KEY (userID) REFERENCES users (userID),
-    INHERITS (Users);
-);
+) INHERITS (Users);
+
+--Ensure ID types are consistent accross tables order ID is an INT, UUID or SERIAL?
+
 CREATE TABLE deliveryUsers (
     deliveryID int NOT NULL,
-    UserID int NOT NULL,
     activeOrderID int,
     isAvailable boolean NOT NULL,
     currentLatitude real NOT NULL,
     currentLongitude real NOT NULL,
 
     PRIMARY KEY (deliveryID),
-    FOREIGN KEY (activeOrder) REFERENCES orders (OrderID),
-    FOREIGN KEY (userID) REFERENCES Users (userID),
-    INHERITS (Users);
-);
+    FOREIGN KEY (activeOrder) REFERENCES orders(OrderID),
+) INHERITS (Users);
 
 CREATE TABLE adminUsers(
     adminID int,
-    UserID int,
 
     PRIMARY KEY (adminID),
-    FOREIGN KEY (userID) REFERENCES users (userID),
-    INHERITS (Users);
+) INHERITS (Users);
 
-);
+--Check id type, make sure clientID and deliveryID still exist for references
 
 CREATE TABLE orders (
     orderID uuid NOT NULL,
     clientID int NOT NULL,
     deliverID int NOT NULL,
-    dateOrder Date NOT NULL,
-    status varchar (20) NOT NULL,
-    amount int NOT NULL,
-    originLatitiude real NOT NULL,
+    orderDate Date NOT NULL,
+    orderStatus varchar (20) NOT NULL,
+    orderCharge int NOT NULL,
+    originLatitude real NOT NULL,
     originLongitude real NOT NULL,
     destinationLatitude real NOT NULL,
-    destinationLOngitude real NOT NULL,
+    destinationLongitude real NOT NULL,
     description varchar (255),
 
     PRIMARY KEY (OrderID),
-    FOREIGN KEY (ClientID) REFERENCES clientUsers (clientID),
-    FOREIGN KEY (DeliverID) REFERENCES deliveryUsers (deliveryID)
+    FOREIGN KEY (ClientID) REFERENCES clientUsers(clientID),
+    FOREIGN KEY (DeliverID) REFERENCES deliveryUsers(deliveryID)
 );
-
