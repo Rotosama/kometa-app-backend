@@ -1,58 +1,54 @@
 CREATE DATABASE kometaApp;
 
---must agree on the ID data type...
-
 CREATE TABLE users (
     userID  serial,
     firstName varchar(50) NOT NULL,
     lastName varchar(50) NOT NULL,
     birthdate Date NOT NULL,
     nationalID varchar(10) NOT NULL,
-    phone smallint,
+    phone varchar(12),
     email varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
+    userUUID uuid,
 
     PRIMARY KEY (UserID),
     UNIQUE (nationalID),
     UNIQUE (email)
 );
 
---Not sure clientID, deliveryID or adminID are needed?
-
 CREATE TABLE clientUsers (
-    clientID int NOT NULL, 
-    userID varchar (50) NOT NULL,
+    clientID serial, 
+    userUUID uuid,
     defaultLatitude real NOT NULL,
     defaultLongitude real NOT NULL,
 
     PRIMARY KEY (clientID),
-) INHERITS (Users);
-
---Ensure ID types are consistent accross tables order ID is an INT, UUID or SERIAL?
+    FOREIGN KEY (userUUID) REFERENCES users(userUUID)
+);
 
 CREATE TABLE deliveryUsers (
-    deliveryID int NOT NULL,
-    activeOrderID int,
+    deliveryID serial,
+    userUUID uuid,
     isAvailable boolean NOT NULL,
     currentLatitude real NOT NULL,
     currentLongitude real NOT NULL,
 
     PRIMARY KEY (deliveryID),
-    FOREIGN KEY (activeOrder) REFERENCES orders(OrderID),
-) INHERITS (Users);
+    FOREIGN KEY (userUUID) REFERENCES users(userUUID)
+);
 
 CREATE TABLE adminUsers(
-    adminID int,
+    adminID serial,
+    userUUID uuid,
 
     PRIMARY KEY (adminID),
-) INHERITS (Users);
-
---Check id type, make sure clientID and deliveryID still exist for references
+    FOREIGN KEY (userUUID) REFERENCES users (userUUID)
+);
 
 CREATE TABLE orders (
-    orderID uuid NOT NULL,
-    clientID int NOT NULL,
-    deliverID int NOT NULL,
+    orderID serial NOT NULL,
+    clientID uuid NOT NULL,
+    deliverID uuid NOT NULL,
     orderDate Date NOT NULL,
     orderStatus varchar (20) NOT NULL,
     orderCharge int NOT NULL,
@@ -61,8 +57,9 @@ CREATE TABLE orders (
     destinationLatitude real NOT NULL,
     destinationLongitude real NOT NULL,
     description varchar (255),
+    orderUUID uuid,
 
     PRIMARY KEY (OrderID),
-    FOREIGN KEY (ClientID) REFERENCES clientUsers(clientID),
-    FOREIGN KEY (DeliverID) REFERENCES deliveryUsers(deliveryID)
+    FOREIGN KEY (clientID) REFERENCES clientUsers(userUUID),
+    FOREIGN KEY (deliverID) REFERENCES deliveryUsers(userUUID)
 );
