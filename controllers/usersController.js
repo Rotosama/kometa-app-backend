@@ -23,4 +23,16 @@ const getUserById = async (req, res) => {
     }
 }
 
-module.exports = { getUsers, getUserById };
+const createUser = (req, res) => {
+    return res.status(418).send("Not implemented");
+}
+
+const updateUser = (req, res) => {
+    return res.status(418).send("Not implemented");
+}
+
+const deleteUser = (req, res) => {
+    return res.status(418).send("Not implemented");
+}
+
+module.exports = { getUsers, getUserById, createUser, updateUser, deleteUser };
