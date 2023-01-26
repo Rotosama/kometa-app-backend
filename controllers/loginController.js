@@ -1,5 +1,3 @@
-const users = require("../users.json");
-
 const authenticate = (req, res) => {
     const requestUsername = req.body.username;
     const requestPassword = req.body.password;

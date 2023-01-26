@@ -1,6 +1,5 @@
 CREATE DATABASE kometaApp;
 
-
 CREATE TABLE users (
     userID  serial UNIQUE,
     firstName varchar(50) NOT NULL,
@@ -69,4 +68,4 @@ VALUES
 ('Laura', 'Pellicer', '1998-07-31', '12345678F', '666666666', 'laura@gmail.com', '1234'),
 ('Rocio', 'Lanfranconi', '1986-08-01', '99999999G', '111111111', 'rocio@gmail.com', '5678'),
 ('Eduard', 'Peters', '1900-01-01', '88888888L', '222222222', 'eduard@gmail.com','1111'),
-('Nacho', 'Ruiz', '1987-03-13', '45777777X', '630476666', 'nacho@gmail.com', '2222')
+('Nacho', 'Ruiz', '1987-03-13', '45777777X', '630476666', 'nacho@gmail.com', '2222');

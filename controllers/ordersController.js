@@ -1,5 +1,3 @@
-const orders = require("../orders.json");
-
 const allOrders = (req, res) => {
     const userId = parseInt(req.body.id);
     const userOrders = orders.filter(order => order.clientId === userId);
