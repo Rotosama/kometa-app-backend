@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const indexRoute = require("./routes/index.js");
 const loginRoute = require("./routes/login.js");
+const usersRoute = require("./routes/users.js");
 const ordersRoute = require("./routes/orders.js");
 
 // Initialize server
@@ -17,8 +18,8 @@ app.use(express.json());
 // Routes to handle
 app.use("/", indexRoute);
 app.use("/login", loginRoute);
+app.use("/users", usersRoute);
 app.use("/orders", ordersRoute);
-
 
 app.listen(PORT, (error) => {
     if (!error)
