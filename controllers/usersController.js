@@ -1,8 +1,9 @@
 const db = require("../db/queries");
+const UsersManager = require ("../models/user");
 
 const getUsers = async (req, res) => {
     try {
-        const result = await db.query("SELECT * FROM users ORDER BY userid ASC");
+        const result = await UsersManager.getAll();
         return res.status(200).json(result);
     }
     catch (error) {
@@ -14,8 +15,12 @@ const getUsers = async (req, res) => {
 const getUserById = async (req, res) => {
     const requestedId = parseInt(req.params.id);
     try {
-        const result = await db.query("SELECT * FROM users WHERE userid = $1", [requestedId]);
-        return res.status(200).json(result[0]);
+        const result = await UsersManager.getOneById(requestedId);
+        if (result){
+            return res.status(200).json(result);
+        }else{
+            return res.status(404).send();
+        }
     }
     catch (error) {
         console.error(error);
@@ -23,8 +28,24 @@ const getUserById = async (req, res) => {
     }
 }
 
-const createUser = (req, res) => {
-    return res.status(418).send("Not implemented");
+const createUser = async (req, res) => {
+    const newUser = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        birthdate: req.body.birthdate,
+        nationalID: req.body.nationalID,
+        phone: req.body.phone,
+        email: req.body.email,
+        password: req.body.password
+    }
+    try{
+        const result = await UsersManager.create(newUser)
+        return res.status(201).json(result)
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).send();
+    }
 }
 
 const updateUser = (req, res) => {
