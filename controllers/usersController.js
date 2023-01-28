@@ -16,11 +16,10 @@ const getUserById = async (req, res) => {
     const requestedId = parseInt(req.params.id);
     try {
         const result = await UsersManager.getOneById(requestedId);
-        if (result){
+        if (result) {
             return res.status(200).json(result);
-        }else{
-            return res.status(404).send();
         }
+        return res.status(404).send();
     }
     catch (error) {
         console.error(error);
@@ -39,8 +38,11 @@ const createUser = async (req, res) => {
         password: req.body.password
     }
     try{
-        const result = await UsersManager.create(newUser)
-        return res.status(201).json(result)
+        const result = await UsersManager.createUser(newUser)
+        if (result) {
+            return res.status(201).json(result)
+        }
+        return res.status(400).send();
     }
     catch (error) {
         console.error(error);
