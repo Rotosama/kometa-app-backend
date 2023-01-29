@@ -1,9 +1,8 @@
-const db = require("../db/queries");
-const UsersManager = require ("../models/user");
+const { UsersManager } = require ("../models/user.js");
 
 const getUsers = async (req, res) => {
     try {
-        const result = await UsersManager.getAll();
+        const result = await UsersManager.getUsers();
         return res.status(200).json(result);
     }
     catch (error) {
@@ -15,7 +14,7 @@ const getUsers = async (req, res) => {
 const getUserById = async (req, res) => {
     const requestedId = parseInt(req.params.id);
     try {
-        const result = await UsersManager.getOneById(requestedId);
+        const result = await UsersManager.getUserById(requestedId);
         if (result) {
             return res.status(200).json(result);
         }

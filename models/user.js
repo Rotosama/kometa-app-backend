@@ -1,16 +1,10 @@
 const db = require("../db/queries");
 
 class User {
+
     constructor(
-        userID,
-        firstName,
-        lastName,
-        birthdate,
-        nationalID,
-        phone,
-        email,
-        password,
-        userUUID
+        userID, firstName, lastName, birthdate, nationalID, phone,
+        email, password, userUUID
     ) {
         this.userID = userID;
         this.firstName = firstName;
@@ -26,15 +20,15 @@ class User {
 
 class UsersManager {
 
-    static async getAll() {
-        const queryResponse = await db.query("SELECT * FROM users");
+    static async getUsers() {
+        const queryResponse = await db.query("SELECT * FROM users;");
         const users = usersDataToObject(queryResponse);
         return users;
     }
 
-    static async getOneById(requestedId) {
+    static async getUserById(requestedId) {
         const queryResponse = await db.query(
-            "SELECT * FROM users WHERE userid = $1",
+            "SELECT * FROM users WHERE userid = $1;",
             [requestedId]
         );
         const users = usersDataToObject(queryResponse);
@@ -42,18 +36,15 @@ class UsersManager {
     }
 
     static async createUser(user) {
-        const data = usersObjectToData(user);
+        const dataArray = usersObjectToData(user);
         const queryResponse = await db.query(
-            "INSERT INTO users(firstname,lastname, birthdate, nationalid, phone, email, password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-            [...data]
+            "INSERT INTO users(firstname,lastname, birthdate, nationalid, phone, email, password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;",
+            dataArray
         );
         if (!queryResponse) {
             return null;
         }
-        const responseObject = {
-            useruuid: queryResponse[0].useruuid
-        }
-        return responseObject;
+        return queryResponse[0].useruuid;
     }
 }
 
@@ -89,4 +80,4 @@ function usersObjectToData(user) {
     ]);
 }
 
-module.exports = UsersManager;
+module.exports = { User, UsersManager };
