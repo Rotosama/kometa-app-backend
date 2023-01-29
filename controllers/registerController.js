@@ -20,6 +20,8 @@ const register = async (req, res) => {
         case "admin":
             await registerAdmin(req, res);
             break;
+        default:
+            return res.status(400).json({error: "Invalid enrolment"});
     }
 }
 
@@ -45,10 +47,5 @@ const registerAdmin = async (req, res) => {
         return res.status(500).send();
     }
 } 
-
-const getAdmins = async (req, res) => {
-    const result = await AdminsManager.getAdmins();
-    return res.status(200).json(result);
-}
 
 module.exports = { register, getAdmins };

@@ -14,7 +14,7 @@ class Admin extends User {
     }
 }
 
-class AdminsManager {
+class AdminsManager extends UsersManager {
 
     static async getAdmins() {
         const queryResponse = await db.query(
@@ -33,7 +33,7 @@ class AdminsManager {
     }
 
     static async createAdmin(user) {
-        const createdUserUuid = await UsersManager.createUser(user);
+        const createdUserUuid = await this.createUser(user);
         const queryResponse = await db.query(
             "INSERT INTO adminusers(useruuid) VALUES ($1) RETURNING *",
             [createdUserUuid]

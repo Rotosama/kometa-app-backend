@@ -1,8 +1,24 @@
+const AdminsManager = require("../models/admin.js");
 const { UsersManager } = require ("../models/user.js");
 
+/*
+The getUsers function has optional query parameters: admin, client, delivery
+If the valid query parameter was provided it routes to the intender Manager
+If no valid query parameter was provided, all users are returned
+*/
 const getUsers = async (req, res) => {
+    let result;
     try {
-        const result = await UsersManager.getUsers();
+        if (req.query.role) {
+            switch(req.query.role) {
+                case ("admin"):
+                    result = await AdminsManager.getAdmins();
+                    break;
+            }
+        }
+        if (!result) {
+            result = await UsersManager.getUsers();
+        }
         return res.status(200).json(result);
     }
     catch (error) {
