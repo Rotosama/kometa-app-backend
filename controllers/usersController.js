@@ -1,4 +1,5 @@
 const AdminsManager = require("../models/admin.js");
+const ClientsManager = require("../models/client.js");
 const { UsersManager } = require ("../models/user.js");
 
 /*
@@ -14,6 +15,11 @@ const getUsers = async (req, res) => {
                 case ("admin"):
                     result = await AdminsManager.getAdmins();
                     break;
+                case ("client"):
+                    result = await ClientsManager.getClients();
+                    break;
+                default:
+                    return res.status(400).json({error: "Invalid query parameters"});
             }
         }
         if (!result) {

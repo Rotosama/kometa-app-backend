@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { UsersManager } = require("../models/user.js");
 const AdminsManager = require ("../models/admin.js");
+const ClientsManager = require ("../models/client.js");
 
 /*
 The register function will perform the following:
@@ -20,6 +21,9 @@ const register = async (req, res) => {
         case "admin":
             await registerAdmin(req, res);
             break;
+        case "client":
+            await registerClient(req, res);
+            break;
         default:
             return res.status(400).json({error: "Invalid enrolment"});
     }
@@ -36,7 +40,7 @@ const registerAdmin = async (req, res) => {
         password: req.body.password
     }
     try{
-        const result = await AdminsManager.createAdmin(newAdmin)
+        const result = await AdminsManager.createAdmin(newAdmin);
         if (result) {
             return res.status(201).json(result)
         }
@@ -48,4 +52,29 @@ const registerAdmin = async (req, res) => {
     }
 } 
 
-module.exports = { register, getAdmins };
+const registerClient = async (req, res) => {
+    const newClient = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        birthdate: req.body.birthdate,
+        nationalID: req.body.nationalID,
+        phone: req.body.phone,
+        email: req.body.email,
+        password: req.body.password,
+        defaultLatitude: req.body.defaultLatitude || 40.42,
+        defaultLongitude: req.body.defaultLongitude || -3.70
+    }
+    try{
+        const result = await ClientsManager.createClient(newClient);
+        if (result) {
+            return res.status(201).json(result)
+        }
+        return res.status(400).send();
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).send();
+    }
+} 
+
+module.exports = { register };
