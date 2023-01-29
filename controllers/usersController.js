@@ -1,6 +1,7 @@
 const { AdminsManager } = require("../models/admin.js");
 const { ClientsManager } = require("../models/client.js");
-const { UsersManager } = require ("../models/user.js");
+const { UsersManager } = require("../models/user.js");
+const { DeliverersManager } = require("../models/delivery.js");
 
 /*
 The getUsers function has optional query parameters: admin, client, delivery
@@ -17,6 +18,9 @@ const getUsers = async (req, res) => {
                     break;
                 case ("client"):
                     result = await ClientsManager.getClients();
+                    break;
+                case ("delivery"):
+                    result = await DeliverersManager.getDeliverers();
                     break;
                 default:
                     return res.status(400).json({error: "Invalid query parameters"});

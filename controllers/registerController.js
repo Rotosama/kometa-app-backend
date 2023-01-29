@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const { UsersManager } = require("../models/user.js");
 const { Admin, AdminsManager } = require("../models/admin.js");
 const { Client, ClientsManager } = require("../models/client.js");
+const { Deliverer, DeliverersManager } = require("../models/delivery.js");
 
 /*
 The register function will perform the following:
@@ -24,6 +25,9 @@ const register = async (req, res) => {
         case "client":
             await registerClient(req, res);
             break;
+        case "delivery":
+            await registerDeliverer(req, res);
+            break;
         default:
             return res.status(400).json({ error: "Invalid enrolment" });
     }
@@ -42,7 +46,6 @@ const registerAdmin = async (req, res) => {
         userUUID = 0,
         adminID = 0
     );
-    console.log(newAdmin);
     try {
         const result = await AdminsManager.createAdmin(newAdmin);
         if (result) {
@@ -73,6 +76,35 @@ const registerClient = async (req, res) => {
     );
     try {
         const result = await ClientsManager.createClient(newClient);
+        if (result) {
+            return res.status(201).json(result)
+        }
+        return res.status(400).send();
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).send();
+    }
+}
+
+const registerDeliverer = async (req, res) => {
+    const newDeliverer = new Deliverer(
+        userID = 0,
+        req.body.firstName,
+        req.body.lastName,
+        req.body.birthdate,
+        req.body.nationalID,
+        req.body.phone,
+        req.body.email,
+        req.body.password,
+        userUUID = 0,
+        deliveryID = 0,
+        req.body.isAvailable,
+        req.body.currentLatitude,
+        req.body.currentLongitude
+    );
+    try {
+        const result = await DeliverersManager.createDeliverer(newDeliverer);
         if (result) {
             return res.status(201).json(result)
         }

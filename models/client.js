@@ -74,7 +74,7 @@ function clientsDataToObject(data) {
 function clientsObjectToData(user) {
     return ([
         user.defaultLatitude,
-        user.defaultLongitude,
+        user.defaultLongitude
     ]);
 }
 

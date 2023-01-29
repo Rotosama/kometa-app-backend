@@ -74,7 +74,7 @@ function adminsObjectToData(user) {
         user.nationalID,
         user.phone,
         user.email,
-        user.password,
+        user.password
     ]);
 }
 
