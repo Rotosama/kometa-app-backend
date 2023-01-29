@@ -1,5 +1,5 @@
 const db = require("../db/queries");
-const { User } = require("./user.js");
+const { User, UsersManager } = require("./user.js");
 
 class Admin extends User {
 
@@ -19,33 +19,29 @@ class AdminsManager {
     static async getAdmins() {
         const queryResponse = await db.query(
             "SELECT * FROM users JOIN adminusers ON users.useruuid = adminusers.useruuid;");
-        console.log(queryResponse);
         const admins = adminsDataToObject(queryResponse);
         return admins;
     }
 
-    static async getOneById(requestedId) {
+    static async getAdminById(requestedId) {
         const queryResponse = await db.query(
-            "SELECT * FROM users WHERE userid = $1",
+            "SELECT * FROM users JOIN adminusers ON users.useruuid = adminusers.useruuid WHERE userid = $1",
             [requestedId]
         );
-        const users = usersDataToObject(queryResponse);
-        return users[0];
+        const admins = adminsDataToObject(queryResponse);
+        return admins[0];
     }
 
-    static async createUser(user) {
-        const dataArray = usersObjectToData(user);
+    static async createAdmin(user) {
+        const createdUserUuid = await UsersManager.createUser(user);
         const queryResponse = await db.query(
-            "INSERT INTO users(firstname,lastname, birthdate, nationalid, phone, email, password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-            dataArray
+            "INSERT INTO adminusers(useruuid) VALUES ($1) RETURNING *",
+            [createdUserUuid]
         );
         if (!queryResponse) {
             return null;
         }
-        const responseObject = {
-            useruuid: queryResponse[0].useruuid
-        }
-        return responseObject;
+        return queryResponse[0].useruuid;
     }
 }
 

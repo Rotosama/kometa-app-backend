@@ -38,7 +38,8 @@ class UsersManager {
     static async createUser(user) {
         const dataArray = usersObjectToData(user);
         const queryResponse = await db.query(
-            "INSERT INTO users(firstname,lastname, birthdate, nationalid, phone, email, password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;",
+            "INSERT INTO users(firstname,lastname, birthdate, nationalid, " +
+            "phone, email, password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;",
             dataArray
         );
         if (!queryResponse) {
@@ -53,15 +54,15 @@ function usersDataToObject(data) {
     for (const userData of data) {
         users.push(
             new User(
-                userId = userData.userid,
-                firstName = userData.firstname,
-                lastName = userData.lastname,
-                birthdate = userData.birthdate,
-                nationalID = userData.nationalid,
-                phone = userData.phone,
-                email = userData.email,
-                password = userData.password,
-                userUUID = userData.useruuid
+                userData.userid,
+                userData.firstname,
+                userData.lastname,
+                userData.birthdate,
+                userData.nationalid,
+                userData.phone,
+                userData.email,
+                userData.password,
+                userData.useruuid
             )
         );
     }
