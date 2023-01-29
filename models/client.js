@@ -5,7 +5,7 @@ class Client extends User {
 
     constructor(
         userID, firstName, lastName, birthdate, nationalID, phone,
-        email, password, userUUID, clientID, defaultLatitude, defaultLongitude
+        email, password, userUUID, clientID, defaultLatitude = 40.42, defaultLongitude = -3.70
     ) {
         super(userID, firstName, lastName, birthdate, nationalID, phone, 
             email, password, userUUID
@@ -78,4 +78,4 @@ function clientsObjectToData(user) {
     ]);
 }
 
-module.exports = ClientsManager;
+module.exports = { Client, ClientsManager };

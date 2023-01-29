@@ -78,4 +78,4 @@ function adminsObjectToData(user) {
     ]);
 }
 
-module.exports = AdminsManager;
+module.exports = { Admin, AdminsManager };

@@ -1,5 +1,5 @@
-const AdminsManager = require("../models/admin.js");
-const ClientsManager = require("../models/client.js");
+const { AdminsManager } = require("../models/admin.js");
+const { ClientsManager } = require("../models/client.js");
 const { UsersManager } = require ("../models/user.js");
 
 /*
