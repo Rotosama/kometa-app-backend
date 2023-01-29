@@ -26,6 +26,15 @@ class UsersManager {
         return users;
     }
 
+    static async getUserByEmailOrNationalId(requestedEmail, requestedNationalId) {
+        const queryResponse = await db.query(
+            "SELECT * FROM users WHERE (email = $1 OR nationalid = $2);",
+            [requestedEmail, requestedNationalId]
+        );
+        const users = usersDataToObject(queryResponse);
+        return users[0];
+    }
+
     static async getUserById(requestedId) {
         const queryResponse = await db.query(
             "SELECT * FROM users WHERE userid = $1;",
