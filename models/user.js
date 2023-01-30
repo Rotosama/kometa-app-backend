@@ -75,7 +75,7 @@ function usersObjectToData(user) {
     '${user.nationalID}',
     '${user.phone}', 
     '${user.email}', 
-   ' ${user.password}'`
+    '${user.password}'`
     );
 }
 module.exports = UsersManager;
