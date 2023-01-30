@@ -1,9 +1,34 @@
-const db = require("../db/queries");
-const UsersManager = require ("../models/user");
+const { AdminsManager } = require("../models/admin.js");
+const { ClientsManager } = require("../models/client.js");
+const { UsersManager } = require("../models/user.js");
+const { DeliverersManager } = require("../models/delivery.js");
 
+/*
+The getUsers function has optional query parameters: admin, client, delivery
+If the valid query parameter was provided it routes to the intender Manager
+If no valid query parameter was provided, all users are returned
+*/
 const getUsers = async (req, res) => {
+    let result;
     try {
-        const result = await UsersManager.getAll();
+        if (req.query.role) {
+            switch(req.query.role) {
+                case ("admin"):
+                    result = await AdminsManager.getAdmins();
+                    break;
+                case ("client"):
+                    result = await ClientsManager.getClients();
+                    break;
+                case ("delivery"):
+                    result = await DeliverersManager.getDeliverers();
+                    break;
+                default:
+                    return res.status(400).json({error: "Invalid query parameters"});
+            }
+        }
+        if (!result) {
+            result = await UsersManager.getUsers();
+        }
         return res.status(200).json(result);
     }
     catch (error) {
@@ -15,12 +40,11 @@ const getUsers = async (req, res) => {
 const getUserById = async (req, res) => {
     const requestedId = parseInt(req.params.id);
     try {
-        const result = await UsersManager.getOneById(requestedId);
-        if (result){
+        const result = await UsersManager.getUserById(requestedId);
+        if (result) {
             return res.status(200).json(result);
-        }else{
-            return res.status(404).send();
         }
+        return res.status(404).send();
     }
     catch (error) {
         console.error(error);
@@ -39,8 +63,11 @@ const createUser = async (req, res) => {
         password: req.body.password
     }
     try{
-        const result = await UsersManager.create(newUser)
-        return res.status(201).json(result)
+        const result = await UsersManager.createUser(newUser)
+        if (result) {
+            return res.status(201).json(result)
+        }
+        return res.status(400).send();
     }
     catch (error) {
         console.error(error);
