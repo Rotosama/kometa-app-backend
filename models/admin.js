@@ -23,10 +23,10 @@ class AdminsManager extends UsersManager {
         return admins;
     }
 
-    static async getAdminById(requestedId) {
+    static async getAdminByUuid(requestedUuid) {
         const queryResponse = await db.query(
-            "SELECT * FROM users JOIN adminusers ON users.useruuid = adminusers.useruuid WHERE userid = $1",
-            [requestedId]
+            "SELECT * FROM users JOIN adminusers ON users.useruuid = adminusers.useruuid WHERE useruuid = $1",
+            [requestedUuid]
         );
         const admins = adminsDataToObject(queryResponse);
         return admins[0];
