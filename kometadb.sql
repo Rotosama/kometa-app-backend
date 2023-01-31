@@ -45,8 +45,8 @@ CREATE TABLE adminUsers(
 
 CREATE TABLE orders (
     orderID serial NOT NULL UNIQUE,
-    clientID uuid NOT NULL,
-    deliverID uuid NOT NULL,
+    clientUUID uuid NOT NULL,
+    deliveryUUID uuid,
     orderDate Date NOT NULL,
     orderStatus varchar (20) NOT NULL,
     orderCharge int NOT NULL,
@@ -58,8 +58,8 @@ CREATE TABLE orders (
     orderUUID uuid UNIQUE DEFAULT gen_random_uuid(),
 
     PRIMARY KEY (OrderID),
-    FOREIGN KEY (clientID) REFERENCES clientUsers(userUUID),
-    FOREIGN KEY (deliverID) REFERENCES deliveryUsers(userUUID)
+    FOREIGN KEY (clientUUID) REFERENCES clientUsers(userUUID),
+    FOREIGN KEY (deliveryUUID) REFERENCES deliveryUsers(userUUID)
 );
 
 INSERT INTO users
@@ -69,3 +69,8 @@ VALUES
 ('Rocio', 'Lanfranconi', '1986-08-01', '99999999G', '111111111', 'rocio@gmail.com', '5678'),
 ('Eduard', 'Peters', '1900-01-01', '88888888L', '222222222', 'eduard@gmail.com','1111'),
 ('Nacho', 'Ruiz', '1987-03-13', '45777777X', '630476666', 'nacho@gmail.com', '2222');
+
+INSERT INTO orders
+(clientUUID, orderdate, orderstatus, ordercharge, originLatitude, originLongitude, destinationLatitude, destinationLongitude, description)
+VALUES
+('82959694-4e3f-496b-94c8-955961c1d140', '2023-01-01', 'In progress', 5, 32.44, 45.23, 33.44, 45.45, 'Lata de atún');
