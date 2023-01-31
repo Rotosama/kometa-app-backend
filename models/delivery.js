@@ -28,7 +28,7 @@ class DeliverersManager extends UsersManager {
 
     static async getDelivererByUuid(requestedUuid) {
         const queryResponse = await db.query(
-            "SELECT * FROM users JOIN deliveryusers ON users.useruuid = deliveryusers.useruuid WHERE useruuid = $1",
+            "SELECT * FROM users JOIN deliveryusers ON users.useruuid = deliveryusers.useruuid WHERE users.useruuid = $1",
             [requestedUuid]
         );
         const deliverers = delivererDataToObject(queryResponse);

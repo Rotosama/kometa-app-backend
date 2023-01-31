@@ -27,7 +27,7 @@ class ClientsManager extends UsersManager {
 
     static async getClientByUuid(requestedUuid) {
         const queryResponse = await db.query(
-            "SELECT * FROM users JOIN clientusers ON users.useruuid = clientusers.useruuid WHERE useruuid = $1",
+            "SELECT * FROM users JOIN clientusers ON users.useruuid = clientusers.useruuid WHERE users.useruuid = $1",
             [requestedUuid]
         );
         const clients = clientsDataToObject(queryResponse);
