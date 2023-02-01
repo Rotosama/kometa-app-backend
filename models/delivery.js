@@ -26,10 +26,10 @@ class DeliverersManager extends UsersManager {
         return deliverers;
     }
 
-    static async getDelivererById(requestedId) {
+    static async getDelivererByUuid(requestedUuid) {
         const queryResponse = await db.query(
-            "SELECT * FROM users JOIN deliveryusers ON users.useruuid = deliveryusers.useruuid WHERE userid = $1",
-            [requestedId]
+            "SELECT * FROM users JOIN deliveryusers ON users.useruuid = deliveryusers.useruuid WHERE users.useruuid = $1",
+            [requestedUuid]
         );
         const deliverers = delivererDataToObject(queryResponse);
         return deliverers[0];

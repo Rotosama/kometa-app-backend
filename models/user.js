@@ -35,10 +35,10 @@ class UsersManager {
         return users[0];
     }
 
-    static async getUserById(requestedId) {
+    static async getUserByUuid(requestedUuid) {
         const queryResponse = await db.query(
-            "SELECT * FROM users WHERE userid = $1;",
-            [requestedId]
+            "SELECT * FROM users WHERE useruuid = $1;",
+            [requestedUuid]
         );
         const users = usersDataToObject(queryResponse);
         return users[0];

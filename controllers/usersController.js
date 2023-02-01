@@ -37,10 +37,10 @@ const getUsers = async (req, res) => {
     }
 }
 
-const getUserById = async (req, res) => {
-    const requestedId = parseInt(req.params.id);
+const getUserByUuid = async (req, res) => {
+    const requestedUuid = req.params.uuid;
     try {
-        const result = await UsersManager.getUserById(requestedId);
+        const result = await UsersManager.getUserByUuid(requestedUuid);
         if (result) {
             return res.status(200).json(result);
         }
@@ -83,4 +83,4 @@ const deleteUser = (req, res) => {
     return res.status(418).send("Not implemented");
 }
 
-module.exports = { getUsers, getUserById, createUser, updateUser, deleteUser };
+module.exports = { getUsers, getUserByUuid, createUser, updateUser, deleteUser };
