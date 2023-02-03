@@ -8,11 +8,11 @@ const { UsersManager } = require("../models/user");
 const getUserRole = async (userUuid) => {
     let result = await ClientsManager.getClientByUuid(userUuid);
     if (result) {
-        return ("Client");
+        return ("client");
     }
     result = await DeliverersManager.getDelivererByUuid(userUuid);
     if (result) {
-        return ("Delivery");
+        return ("delivery");
     }
     result = await AdminsManager.getAdminByUuid(userUuid);
     if (result) {
@@ -27,7 +27,7 @@ const authenticate = async (req, res) => {
     try {
         const result = await UsersManager.getUserByEmailOrNationalId(requestEmail);
         if (!result) {
-            return res.status(400).json({ error: "Incorrect email or password" })
+            return res.status(400).json({ error: "Incorrect email or password" });
         }
         const isCorrectPassword = await bcrypt.compare(requestPassword, result.password);
         if (isCorrectPassword) {
@@ -38,7 +38,7 @@ const authenticate = async (req, res) => {
             const payload = {
                 userUUID: result.userUUID,
                 userRole: userRole
-            }
+            };
             const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 });
             return res.status(200).json({
                 token: token,

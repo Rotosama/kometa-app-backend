@@ -18,68 +18,72 @@ const register = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     req.body.password = hashedPassword;
-    switch (req.body.role) {
-        case "admin":
-            await registerAdmin(req, res);
-            break;
-        case "client":
-            await registerClient(req, res);
-            break;
-        case "delivery":
-            await registerDeliverer(req, res);
-            break;
-        default:
-            return res.status(400).json({ error: "Invalid enrolment" });
+    try {
+        let newUser;
+        switch (req.body.role) {
+            case "admin":
+                newUser = await registerAdmin(req.body);
+                break;
+            case "client":
+                newUser = await registerClient(req.body);
+                break;
+            case "delivery":
+                newUser = await registerDeliverer(req.body);
+                break;
+            default:
+                return res.status(400).json({ error: "Invalid enrolment" });
+        }
+        if (newUser) {
+            return res.status(201).json({ message: "User created" });
+        }
+        return res.status(400).send();
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send();
     }
 }
 
-const registerAdmin = async (req, res) => {
+const registerAdmin = async (userInfo) => {
     const newAdmin = new Admin(
         userID = 0,
-        req.body.firstName,
-        req.body.lastName,
-        req.body.birthdate,
-        req.body.nationalID,
-        req.body.phone,
-        req.body.email,
-        req.body.password,
+        userInfo.firstName,
+        userInfo.lastName,
+        userInfo.birthdate,
+        userInfo.nationalID,
+        userInfo.phone,
+        userInfo.email,
+        userInfo.password,
         userUUID = 0,
         adminID = 0
     );
     try {
         const result = await AdminsManager.createAdmin(newAdmin);
-        if (result) {
-            return res.status(201).json(result)
-        }
-        return res.status(400).send();
+        return (result);
     }
     catch (error) {
         console.error(error);
-        return res.status(500).send();
+        return (null);
     }
 }
 
-const registerClient = async (req, res) => {
+const registerClient = async (userInfo) => {
     const newClient = new Client(
         userID = 0,
-        req.body.firstName,
-        req.body.lastName,
-        req.body.birthdate,
-        req.body.nationalID,
-        req.body.phone,
-        req.body.email,
-        req.body.password,
+        userInfo.firstName,
+        userInfo.lastName,
+        userInfo.birthdate,
+        userInfo.nationalID,
+        userInfo.phone,
+        userInfo.email,
+        userInfo.password,
         userUUID = 0,
         clientID = 0,
-        req.body.defaultLatitude,
-        req.body.defaultLongitude
+        userInfo.defaultLatitude,
+        userInfo.defaultLongitude
     );
     try {
         const result = await ClientsManager.createClient(newClient);
-        if (result) {
-            return res.status(201).json(result)
-        }
-        return res.status(400).send();
+        return (result);
     }
     catch (error) {
         console.error(error);
@@ -87,32 +91,29 @@ const registerClient = async (req, res) => {
     }
 }
 
-const registerDeliverer = async (req, res) => {
+const registerDeliverer = async (userInfo) => {
     const newDeliverer = new Deliverer(
         userID = 0,
-        req.body.firstName,
-        req.body.lastName,
-        req.body.birthdate,
-        req.body.nationalID,
-        req.body.phone,
-        req.body.email,
-        req.body.password,
+        userInfo.firstName,
+        userInfo.lastName,
+        userInfo.birthdate,
+        userInfo.nationalID,
+        userInfo.phone,
+        userInfo.email,
+        userInfo.password,
         userUUID = 0,
         deliveryID = 0,
-        req.body.isAvailable,
-        req.body.currentLatitude,
-        req.body.currentLongitude
+        userInfo.isAvailable,
+        userInfo.currentLatitude,
+        userInfo.currentLongitude
     );
     try {
         const result = await DeliverersManager.createDeliverer(newDeliverer);
-        if (result) {
-            return res.status(201).json(result)
-        }
-        return res.status(400).send();
+        return (result);
     }
     catch (error) {
         console.error(error);
-        return res.status(500).send();
+        return (null);
     }
 }
 

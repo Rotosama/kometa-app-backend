@@ -61,11 +61,11 @@ const createUser = async (req, res) => {
         phone: req.body.phone,
         email: req.body.email,
         password: req.body.password
-    }
+    };
     try{
-        const result = await UsersManager.createUser(newUser)
+        const result = await UsersManager.createUser(newUser);
         if (result) {
-            return res.status(201).json(result)
+            return res.status(201).json(result);
         }
         return res.status(400).send();
     }
