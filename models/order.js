@@ -63,23 +63,42 @@ class OrdersManager {
     return orders;
   }
 
-  static async createOrder (order) {
+  static async createOrder(order) {
     const dataArray = ordersObjectToData(order);
     const queryResponse = await db.query(
-        "INSERT INTO orders (clientUUID, orderdate, orderstatus, ordercharge, originLatitude, originLongitude, destinationLatitude, destinationLongitude, description)" + 
+      "INSERT INTO orders (clientUUID, orderdate, orderstatus, ordercharge, originLatitude, originLongitude, destinationLatitude, destinationLongitude, description)" +
         "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;",
-        dataArray
+      dataArray
     );
     if (!queryResponse) {
-        return null;
+      return null;
     }
     return queryResponse;
   }
 
-  static async updateOrder (order) {
-
+  static async updateStatus(updatedOrder) {
+    const queryResponse = await db.query(
+      "UPDATE orders " +
+        "SET orderstatus = $1 " +
+        "WHERE orderuuid = $2 RETURNING *;",
+      [updatedOrder.orderStatus, updatedOrder.orderUUID]
+    );
+    if (!queryResponse) {
+      return null;
+    }
+    return queryResponse;
   }
 
+  static async deleteOrder(requestedUUID) {
+    const queryResponse = await db.query(
+      "DELETE FROM orders WHERE orderuuid = $1;",
+      [requestedUUID]
+    );
+    if (!queryResponse) {
+      return null;
+    }
+    return queryResponse;
+  }
 }
 
 function ordersDataToObject(data) {
@@ -114,7 +133,7 @@ function ordersObjectToData(order) {
     order.originLongitude,
     order.destinationLatitude,
     order.destinationLongitude,
-    order.description
+    order.description,
   ];
 }
 

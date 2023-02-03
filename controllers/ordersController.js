@@ -1,10 +1,23 @@
 const db = require("../db/queries");
 const OrdersManager = require("../models/order");
 
+
+//TO DO
 const getOrders = async (req, res) => {
+  let result;
   try {
-    const result = await OrdersManager.getAll();
-    return res.status(200).json(result);
+    if (req.query.client) {
+        result = await OrdersManager.getAllByClient(req.query);
+        return res.status(200).json(result);
+    }
+    if (req.query.delivery){
+          result = await OrdersManager.getAllByDelivery(req.query);
+          return res.status(200).json(result);
+    }
+    if (!req.query) {
+      result = await OrdersManager.getAll();
+      return res.status(200).json(result);
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).send();
@@ -12,7 +25,7 @@ const getOrders = async (req, res) => {
 };
 
 const getOrderById = async (req, res) => {
-  const requestedId = parseInt(req.params.id);
+  const requestedId = req.params.id;
   try {
     const result = await OrdersManager.getOneById(requestedId);
     if (result) {
@@ -27,7 +40,7 @@ const getOrderById = async (req, res) => {
 };
 
 const getOrderByClientID = async (req, res) => {
-  const requestedId = parseInt(req.params.id);
+  const requestedId = req.params.id;
   try {
     const result = await OrdersManager.getAllByClient(requestedId);
     if (result) {
@@ -41,7 +54,7 @@ const getOrderByClientID = async (req, res) => {
 };
 
 const getOrderByDeliveryID = async (req, res) => {
-  const requestedId = parseInt(req.params.id);
+  const requestedId = req.params.id;
   try {
     const result = await OrdersManager.getAllByDelivery(requestedId);
     if (result) {
@@ -78,17 +91,42 @@ const createOrder = async (req, res) => {
   }
 };
 
-const updateOrder = (req, res) => {
-  return res.status(418).send("Not implemented");
+const updateOrder = async (req, res) => {
+  const updatedOrder = {
+    orderStatus: req.body.orderStatus,
+    orderUUID: req.params.id,
+  };
+  try {
+    const result = await OrdersManager.updateStatus(updatedOrder);
+    if (result) {
+      return res.status(201).json(result);
+    }
+    return res.status(400).send();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
 };
 
-const deleteOrder = (req, res) => {
-  return res.status(418).send("Not implemented");
+const deleteOrder = async (req, res) => {
+  const requestedId = req.params.id;
+  try {
+    const result = await OrdersManager.deleteOrder(requestedId);
+    if (result) {
+      return res.status(200).json(result);
+    }
+    return res.status(404).send();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
 };
 
 module.exports = {
   getOrders,
   getOrderById,
+  getOrderByDeliveryID,
+  getOrderByClientID,
   createOrder,
   updateOrder,
   deleteOrder,
