@@ -1,10 +1,23 @@
 const db = require("../db/queries");
 const OrdersManager = require("../models/order");
 
+
+//TO DO
 const getOrders = async (req, res) => {
+  let result;
   try {
-    const result = await OrdersManager.getAll();
-    return res.status(200).json(result);
+    if (req.query.client) {
+        result = await OrdersManager.getAllByClient(req.query);
+        return res.status(200).json(result);
+    }
+    if (req.query.delivery){
+          result = await OrdersManager.getAllByDelivery(req.query);
+          return res.status(200).json(result);
+    }
+    if (!req.query) {
+      result = await OrdersManager.getAll();
+      return res.status(200).json(result);
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).send();
@@ -79,10 +92,10 @@ const createOrder = async (req, res) => {
 };
 
 const updateOrder = async (req, res) => {
-  const updatedOrder = [
-    (orderStatus = req.body.orderStatus),
-    (orderUUID = req.params.id),
-  ];
+  const updatedOrder = {
+    orderStatus: req.body.orderStatus,
+    orderUUID: req.params.id,
+  };
   try {
     const result = await OrdersManager.updateStatus(updatedOrder);
     if (result) {

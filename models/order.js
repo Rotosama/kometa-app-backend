@@ -1,4 +1,3 @@
-const { deleteOrder } = require("../controllers/ordersController");
 const db = require("../db/queries");
 
 class Order {
@@ -82,7 +81,7 @@ class OrdersManager {
       "UPDATE orders " +
         "SET orderstatus = $1 " +
         "WHERE orderuuid = $2 RETURNING *;",
-      updatedOrder
+      [updatedOrder.orderStatus, updatedOrder.orderUUID]
     );
     if (!queryResponse) {
       return null;
