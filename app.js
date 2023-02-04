@@ -7,6 +7,7 @@ const loginRoute = require("./routes/login.js");
 const registerRoute = require("./routes/register.js");
 const usersRoute = require("./routes/users.js");
 const ordersRoute = require("./routes/orders.js");
+const verifyJWT = require("./middleware/verifyJWT.js");
 
 // Initialize server
 const app = express();
@@ -21,7 +22,7 @@ app.use("/", indexRoute);
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
 app.use("/users", usersRoute);
-app.use("/orders", ordersRoute);
+app.use("/orders", verifyJWT, ordersRoute);
 
 app.listen(PORT, (error) => {
     if (!error)

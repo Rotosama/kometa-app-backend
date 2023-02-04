@@ -29,6 +29,7 @@ class Order {
     this.orderUUID = orderUUID;
   }
 }
+
 class OrdersManager {
   static async getAll() {
     const queryResponse = await db.query("SELECT * FROM orders");
@@ -66,14 +67,14 @@ class OrdersManager {
   static async createOrder(order) {
     const dataArray = ordersObjectToData(order);
     const queryResponse = await db.query(
-      "INSERT INTO orders (clientUUID, orderdate, orderstatus, ordercharge, originLatitude, originLongitude, destinationLatitude, destinationLongitude, description)" +
+      "INSERT INTO orders (clientuuid, orderdate, orderstatus, ordercharge, originLatitude, originLongitude, destinationLatitude, destinationLongitude, description)" +
         "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;",
       dataArray
     );
     if (!queryResponse) {
       return null;
     }
-    return queryResponse;
+    return queryResponse[0];
   }
 
   static async updateStatus(updatedOrder) {
@@ -123,6 +124,7 @@ function ordersDataToObject(data) {
   }
   return orders;
 }
+
 function ordersObjectToData(order) {
   return [
     order.clientUUID,
