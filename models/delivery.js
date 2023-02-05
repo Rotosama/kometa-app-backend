@@ -35,6 +35,14 @@ class DeliverersManager extends UsersManager {
         return deliverers[0];
     }
 
+    static async getDeliverersByAvailability(status) {
+        const queryResponse = await db.query(
+            "SELECT * FROM deliveryusers WHERE isavailable = $1;",
+            [status]
+        );
+        return queryResponse;
+    }
+
     static async createDeliverer(user) {
         const createdUserUuid = await this.createUser(user);
         const delivererData = [createdUserUuid, ...delivererObjectToData(user)];
