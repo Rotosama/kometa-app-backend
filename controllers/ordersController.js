@@ -1,8 +1,6 @@
-const db = require("../db/queries");
 const OrdersManager = require("../models/order");
+const assignOrder = require("../services/assignOrder");
 
-
-//TO DO
 const getOrders = async (req, res) => {
     let result;
     try {
@@ -14,10 +12,8 @@ const getOrders = async (req, res) => {
             result = await OrdersManager.getAllByDelivery(req.query);
             return res.status(200).json(result);
         }
-        if (!req.query) {
-            result = await OrdersManager.getAll();
-            return res.status(200).json(result);
-        }
+        result = await OrdersManager.getAll();
+        return res.status(200).json(result);
     } catch (error) {
         console.error(error);
         return res.status(500).send();
@@ -86,6 +82,7 @@ const createOrder = async (req, res) => {
         const result = await OrdersManager.createOrder(newOrder);
         if (result) {
             // call the assigning function
+            assignOrder();
             return res.status(201).json(result);
         }
         return res.status(400).send();
