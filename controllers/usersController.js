@@ -82,7 +82,6 @@ const updateAvailability = async (req, res) => {
         return res.status(400).send();
     }
     const newAvailability = req.query.available === "true" ? true : false;
-    console.log("update status to", newAvailability);
     const queryResult = await DeliverersManager.updateDelivererAvailablity(req.user.userUUID, newAvailability);
     if (queryResult && queryResult.isavailable === true) {
         assignOrder();

@@ -98,6 +98,19 @@ class OrdersManager {
     return queryResponse;
   }
 
+  static async updateDeliveryStatus(deliveryUUID, orderUUID) {
+    const queryResponse = await db.query(
+        "UPDATE orders " +
+        "SET deliveryuuid = $1, orderstatus = 'Delivering'" +
+        "WHERE orderuuid = $2 RETURNING *;",
+        [deliveryUUID, orderUUID]
+    );
+    if (!queryResponse) {
+        return null;
+    }
+    return queryResponse;
+  }
+
   static async deleteOrder(requestedUUID) {
     const queryResponse = await db.query(
       "DELETE FROM orders WHERE orderuuid = $1;",
