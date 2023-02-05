@@ -2,6 +2,7 @@ const { AdminsManager } = require("../models/admin.js");
 const { ClientsManager } = require("../models/client.js");
 const { UsersManager } = require("../models/user.js");
 const { DeliverersManager } = require("../models/delivery.js");
+const assignOrder = require("../services/assignOrder.js");
 
 /*
 The getUsers function has optional query parameters: admin, client, delivery
@@ -75,6 +76,20 @@ const createUser = async (req, res) => {
     }
 }
 
+//updateAvailability requires query param "available"
+const updateAvailability = async (req, res) => {
+    if (req.user.userRole !== "delivery" || !req.query.available) {
+        return res.status(400).send();
+    }
+    const newAvailability = req.query.available === "true" ? true : false;
+    console.log("update status to", newAvailability);
+    const queryResult = await DeliverersManager.updateDelivererAvailablity(req.user.userUUID, newAvailability);
+    if (queryResult && queryResult.isavailable === true) {
+        assignOrder();
+    }
+    return res.status(200).send();
+}
+
 const updateUser = (req, res) => {
     return res.status(418).send("Not implemented");
 }
@@ -83,4 +98,5 @@ const deleteUser = (req, res) => {
     return res.status(418).send("Not implemented");
 }
 
-module.exports = { getUsers, getUserByUuid, createUser, updateUser, deleteUser };
+module.exports = { getUsers, getUserByUuid, createUser, updateAvailability,
+    updateUser, deleteUser };

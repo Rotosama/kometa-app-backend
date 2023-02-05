@@ -21,7 +21,7 @@ app.use(express.json());
 app.use("/", indexRoute);
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
-app.use("/users", usersRoute);
+app.use("/users", verifyJWT, usersRoute);
 app.use("/orders", verifyJWT, ordersRoute);
 
 app.listen(PORT, (error) => {

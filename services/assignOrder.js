@@ -10,7 +10,7 @@ const assignOrder = async () => {
     }
     // check if there are Pending orders else return
     console.log("checking for pending orders");
-    const pendingOrders = await OrdersManager
+    //const pendingOrders = await OrdersManager
     // assign oldest order to first deliverer
     console.log("assigning oldest order to first delivery match");
 }
