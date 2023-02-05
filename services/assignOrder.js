@@ -8,11 +8,17 @@ const assignOrder = async () => {
     if (availableDeliverers.length === 0) {
         return ;
     }
+    console.log(availableDeliverers);
     // check if there are Pending orders else return
     console.log("checking for pending orders");
-    //const pendingOrders = await OrdersManager
+    const pendingOrders = await OrdersManager.getAllByOrderStatus("Pending");
+    if (pendingOrders.length === 0) {
+        return ;
+    }
+    console.log(pendingOrders);
     // assign oldest order to first deliverer
     console.log("assigning oldest order to first delivery match");
+    
 }
 
 module.exports = assignOrder;

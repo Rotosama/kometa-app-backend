@@ -64,6 +64,14 @@ class OrdersManager {
     return orders;
   }
 
+  static async getAllByOrderStatus(orderStatus) {
+    const queryResponse = await db.query(
+        "SELECT * FROM orders WHERE orderstatus = $1 ORDER BY orderdate;",
+        [orderStatus]);
+    const orders = ordersDataToObject(queryResponse);
+    return orders;
+  }
+
   static async createOrder(order) {
     const dataArray = ordersObjectToData(order);
     const queryResponse = await db.query(
@@ -116,7 +124,7 @@ function ordersDataToObject(data) {
         orderData.originlatitude,
         orderData.originlongitude,
         orderData.destinationlatitude,
-        orderData.destinationongitude,
+        orderData.destinationlongitude,
         orderData.description,
         orderData.orderuuid
       )
