@@ -1,23 +1,20 @@
 const db = require("../db/queries");
 const OrdersManager = require("../models/order");
 
-
-//TO DO
 const getOrders = async (req, res) => {
   let result;
   try {
     if (req.query.client) {
-        result = await OrdersManager.getAllByClient(req.query);
-        return res.status(200).json(result);
-    }
-    if (req.query.delivery){
-          result = await OrdersManager.getAllByDelivery(req.query);
-          return res.status(200).json(result);
-    }
-    if (!req.query) {
-      result = await OrdersManager.getAll();
+      result = await OrdersManager.getAllByClient(req.query.client);
       return res.status(200).json(result);
     }
+    if (req.query.delivery) {
+      result = await OrdersManager.getAllByDelivery(req.query.delivery);
+      return res.status(200).json(result);
+    }
+
+    result = await OrdersManager.getAll();
+    return res.status(200).json(result);
   } catch (error) {
     console.error(error);
     return res.status(500).send();
@@ -125,8 +122,6 @@ const deleteOrder = async (req, res) => {
 module.exports = {
   getOrders,
   getOrderById,
-  getOrderByDeliveryID,
-  getOrderByClientID,
   createOrder,
   updateOrder,
   deleteOrder,
