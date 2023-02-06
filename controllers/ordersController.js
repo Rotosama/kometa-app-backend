@@ -124,11 +124,9 @@ const deleteOrder = async (req, res) => {
 };
 
 module.exports = {
-    getOrders,
-    getOrderById,
-    getOrderByDeliveryID,
-    getOrderByClientID,
-    createOrder,
-    updateOrder,
-    deleteOrder,
+  getOrders,
+  getOrderById,
+  createOrder,
+  updateOrder,
+  deleteOrder
 };

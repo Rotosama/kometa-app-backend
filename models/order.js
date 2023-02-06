@@ -48,7 +48,7 @@ class OrdersManager {
 
   static async getAllByClient(requestedUUID) {
     const queryResponse = await db.query(
-      "SELECT * FROM orders WHERE clientuuid = $1",
+      "SELECT * FROM orders WHERE clientuuid = $1;",
       [requestedUUID]
     );
     const orders = ordersDataToObject(queryResponse);
@@ -57,7 +57,7 @@ class OrdersManager {
 
   static async getAllByDelivery(requestedUUID) {
     const queryResponse = await db.query(
-      "SELECT * FROM orders WHERE deliveryuuid = $1",
+      "SELECT * FROM orders WHERE deliveryuuid = $1;",
       [requestedUUID]
     );
     const orders = ordersDataToObject(queryResponse);
