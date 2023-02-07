@@ -29,6 +29,7 @@ class Order {
     this.orderUUID = orderUUID;
   }
 }
+
 class OrdersManager {
   static async getAll() {
     const queryResponse = await db.query("SELECT * FROM orders");
@@ -63,17 +64,25 @@ class OrdersManager {
     return orders;
   }
 
+  static async getAllByOrderStatus(orderStatus) {
+    const queryResponse = await db.query(
+        "SELECT * FROM orders WHERE orderstatus = $1 ORDER BY orderdate;",
+        [orderStatus]);
+    const orders = ordersDataToObject(queryResponse);
+    return orders;
+  }
+
   static async createOrder(order) {
     const dataArray = ordersObjectToData(order);
     const queryResponse = await db.query(
-      "INSERT INTO orders (clientUUID, orderdate, orderstatus, ordercharge, originLatitude, originLongitude, destinationLatitude, destinationLongitude, description)" +
+      "INSERT INTO orders (clientuuid, orderdate, orderstatus, ordercharge, originLatitude, originLongitude, destinationLatitude, destinationLongitude, description)" +
         "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;",
       dataArray
     );
     if (!queryResponse) {
       return null;
     }
-    return queryResponse;
+    return queryResponse[0];
   }
 
   static async updateStatus(updatedOrder) {
@@ -85,6 +94,19 @@ class OrdersManager {
     );
     if (!queryResponse) {
       return null;
+    }
+    return queryResponse;
+  }
+
+  static async updateDeliveryStatus(deliveryUUID, orderUUID) {
+    const queryResponse = await db.query(
+        "UPDATE orders " +
+        "SET deliveryuuid = $1, orderstatus = 'Delivering'" +
+        "WHERE orderuuid = $2 RETURNING *;",
+        [deliveryUUID, orderUUID]
+    );
+    if (!queryResponse) {
+        return null;
     }
     return queryResponse;
   }
@@ -115,7 +137,7 @@ function ordersDataToObject(data) {
         orderData.originlatitude,
         orderData.originlongitude,
         orderData.destinationlatitude,
-        orderData.destinationongitude,
+        orderData.destinationlongitude,
         orderData.description,
         orderData.orderuuid
       )
@@ -123,6 +145,7 @@ function ordersDataToObject(data) {
   }
   return orders;
 }
+
 function ordersObjectToData(order) {
   return [
     order.clientUUID,
