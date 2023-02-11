@@ -4,12 +4,12 @@ const assignOrder = require("../services/assignOrder");
 const getOrders = async (req, res) => {
     let result;
     try {
-        if (req.query.client) {
-            result = await OrdersManager.getAllByClient(req.query);
+        if (req.user.userRole === 'client') {
+            result = await OrdersManager.getAllByClient(req.user.userUUID);
             return res.status(200).json(result);
         }
-        if (req.query.delivery) {
-            result = await OrdersManager.getAllByDelivery(req.query);
+        if (req.user.userRole === 'delivery') {
+            result = await OrdersManager.getAllByDelivery(req.user.userUUID);
             return res.status(200).json(result);
         }
         result = await OrdersManager.getAll();
