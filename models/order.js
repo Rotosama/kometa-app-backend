@@ -10,8 +10,10 @@ class Order {
     orderCharge,
     originLatitude,
     originLongitude,
+    originAddress,
     destinationLatitude,
     destinationLongitude,
+    destinationAddress,
     description,
     orderUUID
   ) {
@@ -23,8 +25,10 @@ class Order {
     this.orderCharge = orderCharge;
     this.originLatitude = originLatitude;
     this.originLongitude = originLongitude;
+    this.originAddress = originAddress;
     this.destinationLatitude = destinationLatitude;
     this.destinationLongitude = destinationLongitude;
+    this.destinationAddress = destinationAddress;
     this.description = description;
     this.orderUUID = orderUUID;
   }
@@ -64,6 +68,27 @@ class OrdersManager {
     return orders;
   }
 
+  static async getAllByClientAndStatus(requestedUUID, queriedStatus) {
+    let queryParameters = "";
+    let queryStatus = [];
+    if (typeof queriedStatus === 'string') {
+        queryParameters = "$2";
+        queryStatus.push(queriedStatus);
+    } else {
+        queriedStatus.forEach((e, i) => {
+            queryParameters = queryParameters.concat('$', i + 2, ',');
+        });
+        queryParameters = queryParameters.substring(0, queryParameters.length - 1);
+        queryStatus = queriedStatus;
+    }
+    const queryResponse = await db.query(
+        "SELECT * FROM orders WHERE clientuuid = $1 AND orderstatus IN ("+ queryParameters +");",
+        [requestedUUID, ...queryStatus]
+    );
+    const orders = ordersDataToObject(queryResponse);
+    return orders;
+  }
+
   static async getAllByOrderStatus(orderStatus) {
     const queryResponse = await db.query(
         "SELECT * FROM orders WHERE orderstatus = $1 ORDER BY orderdate;",
@@ -75,8 +100,10 @@ class OrdersManager {
   static async createOrder(order) {
     const dataArray = ordersObjectToData(order);
     const queryResponse = await db.query(
-      "INSERT INTO orders (clientuuid, orderdate, orderstatus, ordercharge, originLatitude, originLongitude, destinationLatitude, destinationLongitude, description)" +
-        "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;",
+      "INSERT INTO orders (clientuuid, orderdate, orderstatus, ordercharge, " +
+      "originLatitude, originLongitude, originAddress, " +
+      "destinationLatitude, destinationLongitude, destinationAddress, description)" +
+        "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;",
       dataArray
     );
     if (!queryResponse) {
@@ -136,8 +163,10 @@ function ordersDataToObject(data) {
         orderData.ordercharge,
         orderData.originlatitude,
         orderData.originlongitude,
+        orderData.originaddress,
         orderData.destinationlatitude,
         orderData.destinationlongitude,
+        orderData.destinationaddress,
         orderData.description,
         orderData.orderuuid
       )
@@ -154,8 +183,10 @@ function ordersObjectToData(order) {
     order.orderCharge,
     order.originLatitude,
     order.originLongitude,
+    order.originAddress,
     order.destinationLatitude,
     order.destinationLongitude,
+    order.destinationAddress,
     order.description,
   ];
 }
