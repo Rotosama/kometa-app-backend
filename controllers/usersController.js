@@ -13,30 +13,31 @@ const getUsers = async (req, res) => {
     let result;
     try {
         if (req.query.role) {
-            switch(req.query.role) {
-                case ("admin"):
+            switch (req.query.role) {
+                case "admin":
                     result = await AdminsManager.getAdmins();
                     break;
-                case ("client"):
+                case "client":
                     result = await ClientsManager.getClients();
                     break;
-                case ("delivery"):
+                case "delivery":
                     result = await DeliverersManager.getDeliverers();
                     break;
                 default:
-                    return res.status(400).json({error: "Invalid query parameters"});
+                    return res
+                        .status(400)
+                        .json({ error: "Invalid query parameters" });
             }
         }
         if (!result) {
             result = await UsersManager.getUsers();
         }
         return res.status(200).json(result);
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
         return res.status(500).send();
     }
-}
+};
 
 const getUserByUuid = async (req, res) => {
     const requestedUuid = req.params.uuid;
@@ -46,12 +47,11 @@ const getUserByUuid = async (req, res) => {
             return res.status(200).json(result);
         }
         return res.status(404).send();
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
         return res.status(500).send();
     }
-}
+};
 
 const createUser = async (req, res) => {
     const newUser = {
@@ -61,20 +61,19 @@ const createUser = async (req, res) => {
         nationalID: req.body.nationalID,
         phone: req.body.phone,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
     };
-    try{
+    try {
         const result = await UsersManager.createUser(newUser);
         if (result) {
             return res.status(201).json(result);
         }
         return res.status(400).send();
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
         return res.status(500).send();
     }
-}
+};
 
 //updateAvailability requires query param "available"
 const updateAvailability = async (req, res) => {
@@ -82,20 +81,29 @@ const updateAvailability = async (req, res) => {
         return res.status(400).send();
     }
     const newAvailability = req.query.available === "true" ? true : false;
-    const queryResult = await DeliverersManager.updateDelivererAvailablity(req.user.userUUID, newAvailability);
+    const queryResult = await DeliverersManager.updateDelivererAvailablity(
+        req.user.userUUID,
+        newAvailability
+    );
     if (queryResult && queryResult.isavailable === true) {
         assignOrder();
     }
     return res.status(200).send();
-}
+};
 
 const updateUser = (req, res) => {
     return res.status(418).send("Not implemented");
-}
+};
 
 const deleteUser = (req, res) => {
     return res.status(418).send("Not implemented");
-}
+};
 
-module.exports = { getUsers, getUserByUuid, createUser, updateAvailability,
-    updateUser, deleteUser };
+module.exports = {
+    getUsers,
+    getUserByUuid,
+    createUser,
+    updateAvailability,
+    updateUser,
+    deleteUser
+};
