@@ -6,10 +6,9 @@ const query = async (text, params) => {
     try {
         const queryResponse = await pool.query(text, params);
         return queryResponse.rows;
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
     }
-}
+};
 
-module.exports = { query }
+module.exports = { query };

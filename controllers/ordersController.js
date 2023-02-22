@@ -12,7 +12,7 @@ const getOrders = async (req, res) => {
             }
             return res.status(200).json(result);
         }
-        if (req.user.userRole === 'delivery') {
+        if (req.user.userRole === "delivery") {
             result = await OrdersManager.getAllByDelivery(req.user.userUUID);
             return res.status(200).json(result);
         }
@@ -130,9 +130,9 @@ const deleteOrder = async (req, res) => {
 };
 
 module.exports = {
-  getOrders,
-  getOrderById,
-  createOrder,
-  updateOrder,
-  deleteOrder
+    getOrders,
+    getOrderById,
+    createOrder,
+    updateOrder,
+    deleteOrder
 };
