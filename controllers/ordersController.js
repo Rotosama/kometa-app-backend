@@ -4,8 +4,12 @@ const assignOrder = require("../services/assignOrder");
 const getOrders = async (req, res) => {
     let result;
     try {
-        if (req.user.userRole === "client") {
-            result = await OrdersManager.getAllByClient(req.user.userUUID);
+        if (req.user.userRole === 'client') {
+            if (req.query.status) {
+                result = await OrdersManager.getAllByClientAndStatus(req.user.userUUID, req.query.status);
+            } else {
+                result = await OrdersManager.getAllByClient(req.user.userUUID);
+            }
             return res.status(200).json(result);
         }
         if (req.user.userRole === "delivery") {
@@ -74,8 +78,10 @@ const createOrder = async (req, res) => {
         orderCharge: req.body.orderCharge,
         originLatitude: req.body.originLatitude,
         originLongitude: req.body.originLongitude,
+        originAddress: req.body.originAddress,
         destinationLatitude: req.body.destinationLatitude,
         destinationLongitude: req.body.destinationLongitude,
+        destinationAddress: req.body.destinationAddress,
         description: req.body.description,
     };
     try {

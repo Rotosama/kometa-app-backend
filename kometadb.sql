@@ -52,8 +52,10 @@ CREATE TABLE orders (
     orderCharge int NOT NULL,
     originLatitude real NOT NULL,
     originLongitude real NOT NULL,
+    originAddress varchar(255) NOT NULL,
     destinationLatitude real NOT NULL,
     destinationLongitude real NOT NULL,
+    destinationAddress varchar(255) NOT NULL,
     description varchar (255),
     orderUUID uuid UNIQUE DEFAULT gen_random_uuid(),
 
@@ -61,16 +63,3 @@ CREATE TABLE orders (
     FOREIGN KEY (clientUUID) REFERENCES clientUsers(userUUID),
     FOREIGN KEY (deliveryUUID) REFERENCES deliveryUsers(userUUID)
 );
-
-INSERT INTO users
-(firstName, lastName, birthdate, nationalID, phone, email, password )
-VALUES
-('Laura', 'Pellicer', '1998-07-31', '12345678F', '666666666', 'laura@gmail.com', '1234'),
-('Rocio', 'Lanfranconi', '1986-08-01', '99999999G', '111111111', 'rocio@gmail.com', '5678'),
-('Eduard', 'Peters', '1900-01-01', '88888888L', '222222222', 'eduard@gmail.com','1111'),
-('Nacho', 'Ruiz', '1987-03-13', '45777777X', '630476666', 'nacho@gmail.com', '2222');
-
-INSERT INTO orders
-(clientUUID, orderdate, orderstatus, ordercharge, originLatitude, originLongitude, destinationLatitude, destinationLongitude, description)
-VALUES
-('82959694-4e3f-496b-94c8-955961c1d140', '2023-01-01', 'In progress', 5, 32.44, 45.23, 33.44, 45.45, 'Lata de atún');
