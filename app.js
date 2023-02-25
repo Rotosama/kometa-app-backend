@@ -3,6 +3,11 @@ const express = require("express");
 const cors = require("cors");
 
 const indexRoute = require("./routes/index.js");
+const loginRoute = require("./routes/login.js");
+const registerRoute = require("./routes/register.js");
+const usersRoute = require("./routes/users.js");
+const ordersRoute = require("./routes/orders.js");
+const verifyJWT = require("./middleware/verifyJWT.js");
 
 // Initialize server
 const app = express();
@@ -14,6 +19,10 @@ app.use(express.json());
 
 // Routes to handle
 app.use("/", indexRoute);
+app.use("/login", loginRoute);
+app.use("/register", registerRoute);
+app.use("/users", verifyJWT, usersRoute);
+app.use("/orders", verifyJWT, ordersRoute);
 
 app.listen(PORT, (error) => {
     if (!error)
