@@ -13,7 +13,11 @@ const getOrders = async (req, res) => {
             return res.status(200).json(result);
         }
         if (req.user.userRole === "delivery") {
-            result = await OrdersManager.getAllByDelivery(req.user.userUUID);
+            if (req.query.status) {
+                result = await OrdersManager.getAllByDeliveryAndStatus(req.user.userUUID, req.query.status);
+            } else {
+                result =  await OrdersManager.getAllByDelivery(req.user.userUUID);
+            }
             return res.status(200).json(result);
         }
         result = await OrdersManager.getAll();
