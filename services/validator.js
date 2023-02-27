@@ -37,22 +37,23 @@ const orderValidator = [
     body("orderDate")
         .exists()
         .trim()
-        .isDate()
+        .isISO8601()
         .withMessage("You should select a valid date"),
-    body("orderStatus").exists().trim(),
     body("orderCharge").exists().trim(),
     body([
         "originLatitude",
         "originLongitude",
         "destinationLatitude",
         "destinationLongitude",
+        "destinationAddress",
+        "originAddress"
     ])
         .exists()
         .trim(),
     body("description")
         .exists()
+        .withMessage("you must describe your load")
         .isAlphanumeric("es-ES")
-        .withMessage("you must describe your load"),
 ];
 
 module.exports = {
