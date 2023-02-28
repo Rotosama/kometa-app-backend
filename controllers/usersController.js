@@ -80,15 +80,20 @@ const updateAvailability = async (req, res) => {
     if (req.user.userRole !== "delivery" || !req.query.available) {
         return res.status(400).send();
     }
-    const newAvailability = req.query.available === "true" ? true : false;
-    const queryResult = await DeliverersManager.updateDelivererAvailablity(
-        req.user.userUUID,
-        newAvailability
-    );
-    if (queryResult && queryResult.isavailable === true) {
-        assignOrder();
+    try {
+        const newAvailability = req.query.available === "true" ? true : false;
+        const queryResult = await DeliverersManager.updateDelivererAvailablity(
+            req.user.userUUID,
+            newAvailability
+        );
+        if (queryResult && queryResult.isavailable === true) {
+            assignOrder();
+        }
+        return res.status(200).send();
+    } catch (error) {
+        console.error(error);
+        return req.status(500).send();
     }
-    return res.status(200).send();
 };
 
 const updateUser = (req, res) => {
@@ -105,5 +110,5 @@ module.exports = {
     createUser,
     updateAvailability,
     updateUser,
-    deleteUser
+    deleteUser,
 };
